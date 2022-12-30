@@ -326,7 +326,18 @@ class Main(scripts.Script):
         if model != "Random":
             payload["models"] = [model]
 
-        #img2img/inpainting
+        if hasattr(p, "init_images"):
+            buffer = io.BytesIO()
+            p.init_images[0].save(buffer, format="WEBP")
+            payload["source_image"] = base64.b64encode(buffer.getvalue()).decode()
+
+            if p.image_mask is None:
+                payload["source_processing"] = "img2img"
+            else:
+                payload["source_processing"] = "inpainting"
+                buffer = io.BytesIO()
+                p.image_mask.save(buffer, format="WEBP")
+                payload["source_mask"] = base64.b64encode(buffer.getvalue()).decode()
 
         if len(post_processing) > 0:
             payload["params"]["post_processing"] = post_processing
