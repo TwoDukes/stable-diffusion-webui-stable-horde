@@ -1,0 +1,10 @@
+#update_model {
+    min-width: auto;
+    flex-grow: 0;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+}
+
+#model_row {
+    gap: 0.5rem;
+}
