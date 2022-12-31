@@ -64,21 +64,19 @@ class Main(scripts.Script):
         return True
 
     def load_models(self):
-        models = requests.get("{}/v2/status/models".format(self.api_endpoint))
-
-        if models.status_code == 200:
+        try:
+            models = requests.get("{}/v2/status/models".format(self.api_endpoint))
+            assert models.status_code == 200
             models = models.json()
             models.sort(key=lambda m: (-m["count"], m["name"]))
             models = ["{} ({})".format(m["name"], m["count"]) for m in models]
-        else:
+        except (requests.ConnectionError, AssertionError):
             models = []
 
         models.insert(0, "Random")
         return models
 
     def ui(self, is_img2img):
-        nsfw = gradio.Checkbox(False, label="NSFW")
-
         with gradio.Box():
             with gradio.Row(elem_id="model_row"):
                 model = gradio.Dropdown(self.load_models(), value="Random", label="Model")
@@ -86,11 +84,12 @@ class Main(scripts.Script):
                 update = gradio.Button(ui.refresh_symbol, elem_id="update_model")
 
         with gradio.Box():
-            seed_variation = gradio.Number(value=1, label="Seed variation", precision=0)
-            seed_variation.style(container=False)
+            with gradio.Row():
+                nsfw = gradio.Checkbox(False, label="NSFW")
+                seed_variation = gradio.Slider(minimum=1, maximum=1000, value=1, step=1, label="Seed variation")
 
         with gradio.Box():
-            with gradio.Row(elem_id="post_processing_row"):
+            with gradio.Row():
                 post_processing_1 = gradio.Dropdown(["None"] + sorted(self.POST_PROCESSINGS), value="None", label="Post processing #1")
                 post_processing_1.style(container=False)
                 post_processing_2 = gradio.Dropdown(["None"] + sorted(self.POST_PROCESSINGS), value="None", label="Post processing #2", interactive=False)
@@ -102,7 +101,7 @@ class Main(scripts.Script):
             return gradio.update(choices=self.load_models(), value="Random")
 
         def post_processing_1_change(value_1):
-            return (gradio.update(choices=["None"] + sorted(self.POST_PROCESSINGS - {value_1}), value="None", interactive=value_1 != "None"), gradio.update(choices=["None"] + sorted(self.POST_PROCESSINGS - {value_1}), value="None", interactive=value_1 != "None"))
+            return (gradio.update(choices=["None"] + sorted(self.POST_PROCESSINGS - {value_1}), value="None", interactive=value_1 != "None"), gradio.update(choices=["None"] + sorted(self.POST_PROCESSINGS - {value_1}), value="None", interactive=False))
 
         def post_processing_2_change(value_1, value_2):
             return gradio.update(choices=["None"] + sorted(self.POST_PROCESSINGS - {value_1, value_2}), value="None", interactive=value_2 != "None")
@@ -127,7 +126,7 @@ class Main(scripts.Script):
                 if post_processing_3 != "None":
                     post_processing.append(post_processing_3.split("(")[0].rstrip())
 
-        return self.process_images(p, nsfw, model, seed_variation, post_processing)
+        return self.process_images(p, nsfw, model, int(seed_variation), post_processing)
 
     def process_images(self, p, nsfw, model, seed_variation, post_processing):
         # Copyright (C) 2022  AUTOMATIC1111
@@ -342,25 +341,37 @@ class Main(scripts.Script):
         if len(post_processing) > 0:
             payload["params"]["post_processing"] = post_processing
 
-        id = requests.post("{}/v2/generate/async".format(self.api_endpoint), headers={"apikey": self.api_key}, json=payload)
+        if shared.state.skipped or shared.state.interrupted:
+            return
 
-        if id.status_code == 202:
+        id = None
+
+        try:
+            id = requests.post("{}/v2/generate/async".format(self.api_endpoint), headers={"apikey": self.api_key}, json=payload)
+            assert id.status_code == 202
             id = id.json()
             id = id["id"]
             shared.state.sampling_steps = p.batch_size
 
             while True:
-                status = requests.get("{}/v2/generate/check/{}".format(self.api_endpoint, id))
+                if shared.state.skipped or shared.state.interrupted:
+                    return self.cancel_process_batch_horde(id)
 
-                if status.status_code == 200:
+                status = None
+
+                try:
+                    status = requests.get("{}/v2/generate/check/{}".format(self.api_endpoint, id), timeout=1)
+                    assert status.status_code == 200
                     status = status.json()
                     shared.state.sampling_step = status["finished"]
 
                     if status["done"]:
                         shared.state.sampling_step = shared.state.sampling_steps
-                        images = requests.get("{}/v2/generate/status/{}".format(self.api_endpoint, id))
+                        images = None
 
-                        if images.status_code == 200:
+                        try:
+                            images = requests.get("{}/v2/generate/status/{}".format(self.api_endpoint, id))
+                            assert images.status_code == 200
                             images = images.json()
                             images = images["generations"]
                             images = [PIL.Image.open(io.BytesIO(base64.b64decode(image["img"]))) for image in images]
@@ -368,9 +379,13 @@ class Main(scripts.Script):
                             images = [torch.from_numpy(image) for image in images]
                             images = torch.stack(images).to(shared.device)
                             return images
-                        else:
-                            images = images.json()
-                            print(images["message"])
+                        except (requests.ConnectionError, AssertionError) as e:
+                            print(e)
+
+                            if images is not None:
+                                images = images.json()
+                                print(images["message"])
+
                             break
                     elif status["faulted"]:
                         print("faulted")
@@ -380,11 +395,44 @@ class Main(scripts.Script):
                         break
                     else:
                         time.sleep(1)
-                else:
-                    status = status.json()
-                    print(status["message"])
-                    break
-        else:
-            id = id.json()
-            print(id["message"])
+                except requests.Timeout:
+                    time.sleep(1)
+                except (requests.ConnectionError, AssertionError) as e:
+                    print(e)
+
+                    if status is not None:
+                        status = status.json()
+                        print(status["message"])
+
+                    return self.cancel_process_batch_horde(id)
+        except (requests.ConnectionError, AssertionError) as e:
             print(payload)
+            print(e)
+
+            if id is not None:
+                id = id.json()
+                print(id["message"])
+
+    def cancel_process_batch_horde(self, id):
+        images = None
+
+        try:
+            images = requests.delete("{}/v2/generate/status/{}".format(self.api_endpoint, id), timeout=60)
+            assert images.status_code == 200
+            images = images.json()
+            images = images["generations"]
+            images = [PIL.Image.open(io.BytesIO(base64.b64decode(image["img"]))) for image in images]
+            images = [numpy.moveaxis(numpy.array(image).astype(numpy.float32) / 255.0, 2, 0) for image in images]
+            images = [torch.from_numpy(image) for image in images]
+
+            if len(images) > 0:
+                images = torch.stack(images).to(shared.device)
+                return images
+        except requests.Timeout:
+            return
+        except (requests.ConnectionError, AssertionError) as e:
+            print(e)
+
+            if images is not None:
+                images = images.json()
+                print(images["message"])
