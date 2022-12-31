@@ -1,4 +1,4 @@
-# stable-diffusion-webui-stable-horde, a Stable Horde client integration to AUTOMATIC1111's Stable Diffusion web UI
+# Stable Horde for Web UI, a Stable Horde client for AUTOMATIC1111's Stable Diffusion Web UI
 # Copyright (C) 2022  Natan Junges <natanajunges@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
