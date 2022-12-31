@@ -25,6 +25,9 @@ import os.path
 import numpy
 import itertools
 import torch
+import json
+
+settings_file = os.path.join(scripts.basedir(), "settings.json")
 
 class FakeModel:
     sd_model_hash=""
@@ -50,12 +53,6 @@ class Main(scripts.Script):
     }
     KARRAS = {"LMS Karras", "DPM2 Karras", "DPM2 a Karras", "DPM++ 2S a Karras", "DPM++ 2M Karras"}
     POST_PROCESSINGS = {"CodeFormers (Restore faces)", "GFPGAN (Restore faces)", "RealESRGAN_x4plus (Upscale)"}
-    #settings tab
-    api_endpoint = "https://stablehorde.net/api"
-    api_key = "0000000000"
-    censor_nsfw = True
-    trusted_workers = True
-    workers = []
 
     def title(self):
         return self.TITLE
@@ -63,7 +60,26 @@ class Main(scripts.Script):
     def show(self, is_img2img):
         return True
 
+    def load_settings(self):
+        if os.path.exists(settings_file):
+            with open(settings_file) as file:
+                opts = json.load(file)
+
+            self.api_endpoint = opts["api_endpoint"]
+            self.api_key = opts["api_key"]
+            self.censor_nsfw = opts["censor_nsfw"]
+            self.trusted_workers = opts["trusted_workers"]
+            self.workers = opts["workers"]
+        else:
+            self.api_endpoint = "https://stablehorde.net/api"
+            self.api_key = "0000000000"
+            self.censor_nsfw = True
+            self.trusted_workers = True
+            self.workers = []
+
     def load_models(self):
+        self.load_settings()
+
         try:
             models = requests.get("{}/v2/status/models".format(self.api_endpoint))
             assert models.status_code == 200
@@ -310,6 +326,7 @@ class Main(scripts.Script):
                 "n": p.batch_size
             }
         }
+        self.load_settings()
 
         if nsfw:
             payload["nsfw"] = True
