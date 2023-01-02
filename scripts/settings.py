@@ -24,7 +24,11 @@ settings_file = os.path.join(scripts.basedir(), "settings.json")
 def settings():
     with gradio.Blocks(analytics_enabled=False) as settings_tab:
         api_endpoint = gradio.Textbox(max_lines=1, placeholder="https://stablehorde.net/api", label="API endpoint", interactive=True)
-        api_key = gradio.Textbox(max_lines=1, placeholder="0000000000", label="API key", interactive=True)
+
+        with gradio.Row():
+            api_key = gradio.Textbox(max_lines=1, placeholder="0000000000", label="API key", interactive=True, type="password")
+            show = gradio.Button(value="Show", elem_id="show_api_key")
+
         censor_nsfw = gradio.Checkbox(label="Censor NSFW when NSFW is disabled", interactive=True)
         trusted_workers = gradio.Checkbox(label="Only send requests to trusted workers", interactive=True)
         workers = gradio.Textbox(max_lines=1, label="Only send requests to these workers", interactive=True)
@@ -33,6 +37,9 @@ def settings():
             reset = gradio.Button(value=ui.reuse_symbol + " Reset settings")
             reload = gradio.Button(value=ui.refresh_symbol + " Reload settings")
             apply = gradio.Button(value=ui.save_style_symbol + " Apply settings", variant="primary")
+
+        def show_click(show):
+            return (gradio.update(type="text" if show == "Show" else "password"), gradio.update(value="Hide" if show == "Show" else "Show"))
 
         def reset_click():
             opts = {
@@ -77,6 +84,7 @@ def settings():
             with open(settings_file, "w") as file:
                 json.dump(opts, file)
 
+        show.click(fn=show_click, inputs=show, outputs=[api_key, show])
         reset.click(fn=reset_click, outputs=[api_endpoint, api_key, censor_nsfw, trusted_workers, workers])
         reload.click(fn=reload_click, outputs=[api_endpoint, api_key, censor_nsfw, trusted_workers, workers])
         apply.click(fn=apply_click, inputs=[api_endpoint, api_key, censor_nsfw, trusted_workers, workers])
