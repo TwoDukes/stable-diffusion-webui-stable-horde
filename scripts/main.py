@@ -52,7 +52,7 @@ class Main(scripts.Script):
         "DPM++ 2M Karras": "k_dpmpp_2m"
     }
     KARRAS = {"LMS Karras", "DPM2 Karras", "DPM2 a Karras", "DPM++ 2S a Karras", "DPM++ 2M Karras"}
-    POST_PROCESSINGS = {"CodeFormers (Restore faces)", "GFPGAN (Restore faces)", "RealESRGAN_x4plus (Upscale)"}
+    POST_PROCESSINGS = {"CodeFormers (Face restoration)", "GFPGAN (Face restoration)", "RealESRGAN_x4plus (Upscaling)"}
 
     def title(self):
         return self.TITLE
