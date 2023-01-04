@@ -61,6 +61,7 @@
     - **Dark Victorian Diffusion** (v2.0): finetuned on dark, moody, victorian imagery
     - **Darkest Diffusion** (v1.0): A free and open source Stable Diffusion model created by AI-Characters, trained on the artstyle of the game 'Darkest Dungeon'
     - **Dawgsmix** (v1): anime and realistic anatomy focused merged of anything , trinart , f222 , sd1.5
+    - **DnD Item** (v1.0): This is a model (dnditem) for creating magic items, for the game Dungeons and Dragons! It was trained to be very similar to the official results that are available here: https://www.dndbeyond.com/magic-items
     - **Double Exposure Diffusion** (v2.0): The Double Exposure Diffusion model, trained specifically on images of people and a few animals
     - **Dreamlike Diffusion** (v1.0): Dreamlike Diffusion 1.0 is SD 1.5 fine tuned on high quality art, made by dreamlike.art
     - **Dreamlike Photoreal** (v1.0): Dreamlike Photoreal 1.0 is a photorealistic Stable Diffusion 1.5 model fine tuned on high quality photos, made by dreamlike.art.
@@ -86,6 +87,7 @@
     - **Midjourney Diffusion** (v1): Stable Diffusion fine tuned on Midjourney v4 images
     - **Midjourney PaintArt** (v1): Midjourney v4 painting style
     - **Min Illust Background** (v1.0): This fine-tuned Stable Diffusion v1.5 model was trained on a selection of artistic works by Sin Jong Hun
+    - **ModernArt Diffusion** (v1.0): You can use this model to generate modernart style images
     - **Nitro Diffusion** (v1): Multi-Style model trained on Arcane, Archer and Mo-Di
     - **Papercut Diffusion** (v1): Stable Diffusion fine tuned on Paper cut images
     - **Papercutcraft** (v1): Paper Cut Craft is a fine tuned Stable Diffusion model trained on Midjourney images
