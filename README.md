@@ -127,6 +127,15 @@
     - **GFPGAN** (v1.4): Face restoration
     - **RealESRGAN_x4plus** (v0.1.0): Upscaling
 
+## How to install it
+
+From the root folder of the Web UI, run:
+```bash
+git clone https://github.com/natanjunges/stable-diffusion-webui-stable-horde extensions/stable-horde
+```
+
+Alternatively, you can download this extension clicking in [this](https://github.com/natanjunges/stable-diffusion-webui-stable-horde/archive/refs/heads/main.zip) link and extract the zip file in the `extensions` folder of the Web UI.
+
 ## How to use it
 
 **To prevent loading the local models, add `--ui-debug-mode` to `COMMANDLINE_ARGS`**.
