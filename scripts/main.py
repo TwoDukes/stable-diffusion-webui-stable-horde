@@ -82,7 +82,7 @@ class Main(scripts.Script):
 
         try:
             models = requests.get("{}/v2/status/models".format(self.api_endpoint))
-            assert models.status_code == 200, "Status Code: {}".format(models.status_code)
+            assert models.status_code == 200, "Status Code: {} (expected {})".format(models.status_code, 200)
             models = models.json()
             models.sort(key=lambda m: (-m["count"], m["name"]))
             models = ["{} ({})".format(m["name"], m["count"]) for m in models]
@@ -371,7 +371,7 @@ class Main(scripts.Script):
 
         try:
             id = requests.post("{}/v2/generate/async".format(self.api_endpoint), headers={"apikey": self.api_key}, json=payload)
-            assert id.status_code == 202, "Status Code: {}".format(id.status_code)
+            assert id.status_code == 202, "Status Code: {} (expected {})".format(id.status_code, 202)
             id = id.json()
             id = id["id"]
             shared.state.sampling_steps = p.batch_size
@@ -384,7 +384,7 @@ class Main(scripts.Script):
 
                 try:
                     status = requests.get("{}/v2/generate/check/{}".format(self.api_endpoint, id), timeout=1)
-                    assert status.status_code == 200, "Status Code: {}".format(status.status_code)
+                    assert status.status_code == 200, "Status Code: {} (expected {})".format(status.status_code, 200)
                     status = status.json()
                     shared.state.sampling_step = status["finished"]
 
@@ -394,7 +394,7 @@ class Main(scripts.Script):
 
                         try:
                             images = requests.get("{}/v2/generate/status/{}".format(self.api_endpoint, id))
-                            assert images.status_code == 200, "Status Code: {}".format(images.status_code)
+                            assert images.status_code == 200, "Status Code: {} (expected {})".format(images.status_code, 200)
                             images = images.json()
                             images = images["generations"]
                             images = [PIL.Image.open(io.BytesIO(base64.b64decode(image["img"]))) for image in images]
@@ -441,7 +441,7 @@ class Main(scripts.Script):
 
         try:
             images = requests.delete("{}/v2/generate/status/{}".format(self.api_endpoint, id), timeout=60)
-            assert images.status_code == 200, "Status Code: {}".format(images.status_code)
+            assert images.status_code == 200, "Status Code: {} (expected {})".format(images.status_code, 200)
             images = images.json()
             images = images["generations"]
             images = [PIL.Image.open(io.BytesIO(base64.b64decode(image["img"]))) for image in images]
