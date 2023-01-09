@@ -4,6 +4,7 @@
 ## Features
 
 - **txt2img**, **img2img**, **depth2img** and **inpaint**
+- **Share generated images with LAION for improving their dataset**
 - Sampling methods:
     - **Euler a**
     - **Euler**
