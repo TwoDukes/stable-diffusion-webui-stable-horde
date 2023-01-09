@@ -8,7 +8,8 @@
     - *Interrogate (img2txt) coming soon*
 - **Share generated images with LAION for improving their dataset**
     - *Aesthetic image rating coming soon*
-- Sampling methods:
+- <details><summary>Sampling methods:</summary>
+
     - **Euler a**
     - **Euler**
     - **LMS** (and **Karras** variant)
@@ -19,14 +20,18 @@
     - **DPM++ 2M** (and **Karras** variant)
     - **DPM fast**
     - **DPM adaptive**
-- Base models:
+    </details>
+- <details><summary>Base models:</summary>
+
     - **stable_diffusion_1.4** (v1.4)
     - **stable_diffusion** (v1.5)
     - **stable_diffusion_inpainting** (v1.5): Generalist model specialized for modifying areas of existing images
     - **stable_diffusion_2.0** (v2.0)
     - **Stable Diffusion 2 Depth** (v2): Generalist model specialized for creating depth maps of existing images, for img2img creations
     - **stable_diffusion_2.1** (v2.1)
-- Custom models:
+    </details>
+- <details><summary>Custom models:</summary>
+
     <!-- [[[cog
     import cog
     import requests
@@ -136,10 +141,13 @@
     - **vectorartz** (v1): Generate beautiful vector illustration
     - **waifu_diffusion** (v1.3): Anime styled generations.
     <!-- [[[end]]] -->
-- Post processing:
+    </details>
+- <details><summary>Post processing:</summary>
+
     - **CodeFormers** (v0.1.0): Face restoration
     - **GFPGAN** (v1.4): Face restoration
     - **RealESRGAN_x4plus** (v0.1.0): Upscaling
+    </details>
 
 ## How to install it
 
