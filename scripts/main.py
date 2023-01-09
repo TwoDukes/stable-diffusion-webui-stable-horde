@@ -103,7 +103,7 @@ class Main(scripts.Script):
         with gradio.Box():
             with gradio.Row():
                 nsfw = gradio.Checkbox(False, label="NSFW")
-                shared_laion = gradio.Checkbox(False, label="Share with LAION")
+                shared_laion = gradio.Checkbox(False, label="Share with LAION", interactive=not is_img2img)
                 seed_variation = gradio.Slider(minimum=1, maximum=1000, value=1, step=1, label="Seed variation", elem_id="horde_seed_variation")
 
         with gradio.Box():
@@ -390,7 +390,7 @@ class Main(scripts.Script):
         if model != "Random":
             payload["models"] = [model]
 
-        if hasattr(p, "init_images"):
+        if self.is_img2img:
             buffer = io.BytesIO()
             p.init_images[0].save(buffer, format="WEBP")
             payload["source_image"] = base64.b64encode(buffer.getvalue()).decode()
@@ -403,7 +403,7 @@ class Main(scripts.Script):
                 p.image_mask.save(buffer, format="WEBP")
                 payload["source_mask"] = base64.b64encode(buffer.getvalue()).decode()
 
-        if shared_laion:
+        if not self.is_img2img and self.api_key != "0000000000" and shared_laion:
             payload["shared"] = True
 
         if len(post_processing) > 0:
