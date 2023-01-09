@@ -27,7 +27,7 @@ def settings():
 
         with gradio.Row():
             api_key = gradio.Textbox(max_lines=1, placeholder="0000000000", label="API key", interactive=True, type="password")
-            show = gradio.Button(value="Show", elem_id="show_api_key")
+            show = gradio.Button(value="Show", elem_id="horde_show_api_key")
 
         censor_nsfw = gradio.Checkbox(label="Censor NSFW when NSFW is disabled", interactive=True)
         trusted_workers = gradio.Checkbox(label="Only send requests to trusted workers", interactive=True)

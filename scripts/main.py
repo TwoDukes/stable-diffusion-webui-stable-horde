@@ -94,15 +94,16 @@ class Main(scripts.Script):
 
     def ui(self, is_img2img):
         with gradio.Box():
-            with gradio.Row(elem_id="model_row"):
+            with gradio.Row(elem_id="horde_model_row"):
                 model = gradio.Dropdown(self.load_models(), value="Random", label="Model")
                 model.style(container=False)
-                update = gradio.Button(ui.refresh_symbol, elem_id="update_model")
+                update = gradio.Button(ui.refresh_symbol, elem_id="horde_update_model")
 
         with gradio.Box():
             with gradio.Row():
                 nsfw = gradio.Checkbox(False, label="NSFW")
-                seed_variation = gradio.Slider(minimum=1, maximum=1000, value=1, step=1, label="Seed variation")
+                shared = gradio.Checkbox(False, label="Share with LAION")
+                seed_variation = gradio.Slider(minimum=1, maximum=1000, value=1, step=1, label="Seed variation", elem_id="horde_seed_variation")
 
         with gradio.Box():
             with gradio.Row():
@@ -125,9 +126,9 @@ class Main(scripts.Script):
         update.click(fn=update_click, outputs=model)
         post_processing_1.change(fn=post_processing_1_change, inputs=post_processing_1, outputs=[post_processing_2, post_processing_3])
         post_processing_2.change(fn=post_processing_2_change, inputs=[post_processing_1, post_processing_2], outputs=post_processing_3)
-        return [nsfw, model, seed_variation, post_processing_1, post_processing_2, post_processing_3]
+        return [model, nsfw, shared, seed_variation, post_processing_1, post_processing_2, post_processing_3]
 
-    def run(self, p, nsfw, model, seed_variation, post_processing_1, post_processing_2, post_processing_3):
+    def run(self, p, model, nsfw, shared, seed_variation, post_processing_1, post_processing_2, post_processing_3):
         if model != "Random":
             model = model.split("(")[0].rstrip()
 
@@ -142,9 +143,9 @@ class Main(scripts.Script):
                 if post_processing_3 != "None":
                     post_processing.append(post_processing_3.split("(")[0].rstrip())
 
-        return self.process_images(p, nsfw, model, int(seed_variation), post_processing)
+        return self.process_images(p, model, nsfw, shared, int(seed_variation), post_processing)
 
-    def process_images(self, p, nsfw, model, seed_variation, post_processing):
+    def process_images(self, p, model, nsfw, shared, seed_variation, post_processing):
         # Copyright (C) 2022  AUTOMATIC1111
 
         stored_opts = {k: shared.opts.data[k] for k in p.override_settings.keys()}
@@ -153,7 +154,7 @@ class Main(scripts.Script):
             for k, v in p.override_settings.items():
                 setattr(shared.opts, k, v)
 
-            res = self.process_images_inner(p, nsfw, model, seed_variation, post_processing)
+            res = self.process_images_inner(p, model, nsfw, shared, seed_variation, post_processing)
         finally:
             if p.override_settings_restore_afterwards:
                 for k, v in stored_opts.items():
@@ -161,7 +162,7 @@ class Main(scripts.Script):
 
         return res
 
-    def process_images_inner(self, p, nsfw, model, seed_variation, post_processing):
+    def process_images_inner(self, p, model, nsfw, shared, seed_variation, post_processing):
         # Copyright (C) 2022  AUTOMATIC1111
 
         if type(p.prompt) == list:
@@ -238,7 +239,7 @@ class Main(scripts.Script):
                 if p.n_iter > 1:
                     shared.state.job = f"Batch {n+1} out of {p.n_iter}"
 
-                x_samples_ddim = self.process_batch_horde(p, nsfw, model, seed_variation, post_processing, prompts[0], negative_prompts[0], seeds[0])
+                x_samples_ddim = self.process_batch_horde(p, model, nsfw, shared, seed_variation, post_processing, prompts[0], negative_prompts[0], seeds[0])
 
                 if x_samples_ddim is None:
                     del x_samples_ddim
@@ -310,7 +311,7 @@ class Main(scripts.Script):
 
         return res
 
-    def process_batch_horde(self, p, nsfw, model, seed_variation, post_processing, prompt, negative_prompt, seed):
+    def process_batch_horde(self, p, model, nsfw, shared, seed_variation, post_processing, prompt, negative_prompt, seed):
         payload = {
             "prompt": "{} ### {}".format(prompt, negative_prompt) if len(negative_prompt) > 0 else prompt,
             "params": {
@@ -354,6 +355,9 @@ class Main(scripts.Script):
                 buffer = io.BytesIO()
                 p.image_mask.save(buffer, format="WEBP")
                 payload["source_mask"] = base64.b64encode(buffer.getvalue()).decode()
+
+        if shared:
+            payload["shared"] = True
 
         if len(post_processing) > 0:
             payload["params"]["post_processing"] = post_processing

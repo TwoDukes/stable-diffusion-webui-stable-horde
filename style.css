@@ -1,10 +1,14 @@
-#update_model, #show_api_key {
+#horde_update_model, #horde_show_api_key {
     min-width: auto;
     flex-grow: 0;
     padding-left: 0.25em;
     padding-right: 0.25em;
 }
 
-#model_row {
+#horde_model_row {
     gap: 0.5rem;
+}
+
+#horde_seed_variation input[type="number"] {
+    width: 6em;
 }

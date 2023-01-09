@@ -42,6 +42,7 @@
     models_out.sort()
     cog.out("\n".join(models_out))
     ]]] -->
+    - **3DKX** (v1.1): SFW model with limited nsfw capabilities (suggestive nsfw) that is highly versatile for 3D renders.
     - **ACertainThing** (v1.0): An improved version of Anything v3 made with ACertainThing, focusing on scenes rather than characters
     - **AIO Pixel Art** (v1): Stable Diffusion fine tuned on pixel art sprites and scenes
     - **Analog Diffusion** (v1.0): A dreambooth model trained on a diverse set of analog photographs
@@ -63,11 +64,13 @@
     - **Dawgsmix** (v1): anime and realistic anatomy focused merged of anything , trinart , f222 , sd1.5
     - **DnD Item** (v1.0): This is a model (dnditem) for creating magic items, for the game Dungeons and Dragons! It was trained to be very similar to the official results that are available here: https://www.dndbeyond.com/magic-items
     - **Double Exposure Diffusion** (v2.0): The Double Exposure Diffusion model, trained specifically on images of people and a few animals
+    - **DreamLikeSamKuvshinov** (v1): A mixture of Dreamlike Diffusion 1.0, SamDoesArt V3 and Kuvshinov style models.  Created mostly for exploring different character concepts with a focus on drawings, but the mix happened to be pretty good at realistic-ish images, all thanks to wonderful models that it uses.
     - **Dreamlike Diffusion** (v1.0): Dreamlike Diffusion 1.0 is SD 1.5 fine tuned on high quality art, made by dreamlike.art
-    - **Dreamlike Photoreal** (v1.0): Dreamlike Photoreal 1.0 is a photorealistic Stable Diffusion 1.5 model fine tuned on high quality photos, made by dreamlike.art.
+    - **Dreamlike Photoreal** (v2.0): Dreamlike Photoreal 1.0 is a photorealistic Stable Diffusion 1.5 model fine tuned on high quality photos, made by dreamlike.art.
     - **Dungeons and Diffusion** (v1): Generates D&D styled characters, trained on art commissions
     - **Eimis Anime Diffusion** (v1): This model is trained with high quality and detailed anime images
     - **Elden Ring Diffusion** (v2): Based on the Elden Ring video game style
+    - **Elldreth's Lucid Mix** (v1.0): It's an all-around easy-to-prompt general purpose semi-realistic to realistic model that cranks out some really nice images. No trigger words required
     - **Eternos** (v1.0): A surrealist / Minimalist model
     - **Fantasy Card Diffusion** (v1): fantasy trading card style art, trained on all currently available Magic: the Gathering card art
     - **Funko Diffusion** (v1.0): Stable Diffusion fine tuned on Funko Pop, by PromptHero.
@@ -76,8 +79,10 @@
     - **GTA5 Artwork Diffusion** (v1.0): This model was trained on the loading screens, gta storymode, and gta online DLCs artworks. Which includes characters, background, chop, and some objects. The model can do people and portrait pretty easily, as well as cars, and houses. For some reasons, the model stills automatically include in some game footage, so landscapes tend to look a bit more game-like.
     - **Ghibli Diffusion** (v1): fine-tuned Stable Diffusion model trained on images from Studio Ghibli feature films
     - **Guohua Diffusion** (v1): fine-tuned Stable Diffusion model trained on traditional Chinese paintings
-    - **Hassanblend** (v1.4): This model was for creating people
-    - **Hentai Diffusion** (v17): Anime focused model with better hands, obscure poses/camera angles and consistent style
+    - **HASDX** (v1.0): He merged a few checkpoints and got something buttery and amazing. Does great with things other then people too. It can do anything really. It doesn't need crazy prompts either. Keep it simple. No need for all the artist names and trending on whatever.
+    - **Hassanblend** (v1.5): This model was for creating people
+    - **Healy's Anime Blend** (v1.0): This is a blend of some anime models mixed with 'realistic' stuff
+    - **Hentai Diffusion** (v19): Anime focused model with better hands, obscure poses/camera angles and consistent style
     - **Inkpunk Diffusion** (v2): inspired by Gorillaz art, FLCL and Yoji Shinkawa. Trained on images generated from Midjourney
     - **JWST Deep Space Diffusion** (v1): Stable Diffusion fine tuned on JWST imagery
     - **Knollingcase** (v1): generates a glass display case with objects inside, inspired by Sean Preston. Trained on Midjourney images
@@ -88,21 +93,26 @@
     - **Midjourney PaintArt** (v1): Midjourney v4 painting style
     - **Min Illust Background** (v1.0): This fine-tuned Stable Diffusion v1.5 model was trained on a selection of artistic works by Sin Jong Hun
     - **ModernArt Diffusion** (v1.0): You can use this model to generate modernart style images
+    - **Moedel** (v2): Moe.del produces cute female characters. It is also a mix of Stable Diffusion 1.4/1.5 in different proportions so you can challenge it to generate for you pretty much anything using regular SD prompts (like cute dogs, cats etc.)
+    - **MoistMix** (v1.0): A do (almost) anything model
     - **Nitro Diffusion** (v1): Multi-Style model trained on Arcane, Archer and Mo-Di
     - **Papercut Diffusion** (v1): Stable Diffusion fine tuned on Paper cut images
     - **Papercutcraft** (v1): Paper Cut Craft is a fine tuned Stable Diffusion model trained on Midjourney images
     - **Poison** (v1): Anything Diffusion fine-tuned to produce high-quality realistic anime styled images
     - **PortraitPlus** (v1.0): This is a dreambooth model trained on a diverse set of close to medium range portraits of people.
-    - **RPG** (v1): portraits of charecters in the style of the game Baldur's Gate
+    - **ProtoGen** (v5.3): One Step Closer to Reality
+    - **RPG** (v2): portraits of charecters in the style of the game Baldur's Gate
     - **Ranma Diffusion** (v1): imitates the style of late '80s early 90's anime, Anything v3 base
     - **Redshift Diffusion** (v1): Dreambooth model trained on high resolution 3D artworks
     - **Robo-Diffusion** (v1): Robot oriented drawing style
     - **Samdoesarts Ultmerge** (v1): Portraits in the style of Sam Yang, merged with chewtoy and orange code's models
+    - **Sci-Fi Diffusion** (v1.0): A Sci-Fi themed model trained on SD 1.5 with a 26K+ image dataset
     - **Seek.art MEGA** (v1.0): Seek.art MEGA is a general use 'anything' model that significantly improves on 1.5 across dozens of styles. Created by Coreco at seek.art
     - **Smoke Diffusion** (v1.0): This is the fine-tuned Stable Diffusion model trained on images of smoke
     - **Spider-Verse Diffusion** (v1): Based on the Into the Spider-Verse movie's animation style
     - **Squishmallow Diffusion** (v1): Squishmallows
     - **Supermarionation** (v2.0): This is a fine-tuned Stable Diffusion model (based on v1.5) trained on screenshots from Gerry Anderson Supermarionation stop motion animation movie, basically from Thunderbirds tv series
+    - **Sygil-Dev Diffusion** (v1): This model is a Stable Diffusion v1.5 fine-tune trained on the Imaginary Network Expanded Dataset. It is an advanced version of Stable Diffusion and can generate nearly all kinds of images, no matter humans, reflections, cities, architecture, fantasy, digital arts, landscapes, or nature views.
     - **Synthwave** (v1): Stable Diffusion model to create images in Synthwave/outrun style
     - **Trinart Characters** (v2.0): Derrida (formerly TrinArt Characters v2) is a stable diffusion v1-based model that was further improved on the previous characters v1 model. While this is still a versatility and compositional variation anime/manga model like other TrinArt models, when compared to the v1 model, Derrida was focused on more anatomical stability and slightly less on variation due to further multi-epoch training and finetuning.
     - **Tron Legacy Diffusion** (v1): Tron Legacy movie style
