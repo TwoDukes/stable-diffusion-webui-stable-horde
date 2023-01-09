@@ -7,7 +7,7 @@
     - *Outpaint coming soon*
     - *Interrogate (img2txt) coming soon*
 - **SFW and NSFW generations**
-- **Share generated images with LAION for improving their dataset**
+- **Share generated images with [LAION](https://laion.ai) for improving their dataset**
     - *Aesthetic image rating coming soon*
 - <details><summary>Sampling methods:</summary>
 
