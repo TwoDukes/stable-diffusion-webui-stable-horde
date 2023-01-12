@@ -42,12 +42,11 @@
     models_out = []
 
     for model in models:
-        if "config" in models[model]:
+        if "config" in models[model] and "download" in models[model]["config"]:
             for file in models[model]["config"]["download"]:
-                if "file_path" in file:
-                    if file["file_path"] == "models/custom":
-                        models_out.append("- **{}** (v{}): {}".format(model, models[model]["version"], models[model]["description"]))
-                        break
+                if "file_path" in file and file["file_path"] == "models/custom":
+                    models_out.append("- **{}** (v{}): {}".format(model, models[model]["version"], models[model]["description"]))
+                    break
 
     models_out.sort()
     cog.out("\n".join(models_out))
@@ -159,8 +158,10 @@ In the Web UI, go to the `Extensions` tab, `Available`, load the list, find `Sta
 
 ## How to use it
 
-**To prevent loading the local models, add `--ui-debug-mode` to `COMMANDLINE_ARGS`**.
+**To prevent loading the local models, add `--ui-debug-mode` to `COMMANDLINE_ARGS`**. *This will raise an exception `AttributeError: 'NoneType' object has no attribute 'process_texts'` whenever the prompts change, but it can be safely ignored*.
 
 1. If you [registered an account](https://stablehorde.net/register), go to the `Stable Horde Settings` tab and set your `API key`. Leaving the default value will connect anonymously, which is limited.
 2. Go to either the `txt2img` or the `img2img` tab and select `Run on Stable Horde` in the `Script` option. Without this option, it will run locally.
 3. Set all parameters, both regular and Stable Horde's, and click `Generate`.
+
+For more information about Stable Horde, workers or kudos, check [their FAQ](https://github.com/db0/AI-Horde/blob/main/FAQ.md).
