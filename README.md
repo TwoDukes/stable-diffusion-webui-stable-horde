@@ -56,6 +56,7 @@
     - **ACertainThing** (v1.0): An improved version of Anything v3 made with ACertainThing, focusing on scenes rather than characters
     - **AIO Pixel Art** (v1): Stable Diffusion fine tuned on pixel art sprites and scenes
     - **Analog Diffusion** (v1.0): A dreambooth model trained on a diverse set of analog photographs
+    - **Anygen** (v3.7): A best of both worlds - merging the anime of Anything v3 with Protogens photorealism - VAE is included
     - **Anything Diffusion** (v3): Highly detailed Anime styled generations
     - **App Icon Diffusion** (v1): Dreambooth model fine tuned on mobile app icons
     - **Arcane Diffusion** (v3): Based on the Arcane TV show
@@ -71,7 +72,6 @@
     - **Cyberpunk Anime Diffusion** (v1): Cyberpunk anime characters
     - **Dark Victorian Diffusion** (v2.0): finetuned on dark, moody, victorian imagery
     - **Darkest Diffusion** (v1.0): A free and open source Stable Diffusion model created by AI-Characters, trained on the artstyle of the game 'Darkest Dungeon'
-    - **Dawgsmix** (v1): anime and realistic anatomy focused merged of anything , trinart , f222 , sd1.5
     - **DnD Item** (v1.0): This is a model (dnditem) for creating magic items, for the game Dungeons and Dragons! It was trained to be very similar to the official results that are available here: https://www.dndbeyond.com/magic-items
     - **Double Exposure Diffusion** (v2.0): The Double Exposure Diffusion model, trained specifically on images of people and a few animals
     - **DreamLikeSamKuvshinov** (v1): A mixture of Dreamlike Diffusion 1.0, SamDoesArt V3 and Kuvshinov style models.  Created mostly for exploring different character concepts with a focus on drawings, but the mix happened to be pretty good at realistic-ish images, all thanks to wonderful models that it uses.
@@ -106,6 +106,7 @@
     - **Moedel** (v2): Moe.del produces cute female characters. It is also a mix of Stable Diffusion 1.4/1.5 in different proportions so you can challenge it to generate for you pretty much anything using regular SD prompts (like cute dogs, cats etc.)
     - **MoistMix** (v1.0): A do (almost) anything model
     - **Nitro Diffusion** (v1): Multi-Style model trained on Arcane, Archer and Mo-Di
+    - **PPP** (v1.0): PPP is a realistic model merge, tested and tweaked for human females. Mostly based on NSFW models
     - **Papercut Diffusion** (v1): Stable Diffusion fine tuned on Paper cut images
     - **Papercutcraft** (v1): Paper Cut Craft is a fine tuned Stable Diffusion model trained on Midjourney images
     - **Poison** (v1): Anything Diffusion fine-tuned to produce high-quality realistic anime styled images
@@ -119,6 +120,7 @@
     - **Sci-Fi Diffusion** (v1.0): A Sci-Fi themed model trained on SD 1.5 with a 26K+ image dataset
     - **Seek.art MEGA** (v1.0): Seek.art MEGA is a general use 'anything' model that significantly improves on 1.5 across dozens of styles. Created by Coreco at seek.art
     - **Smoke Diffusion** (v1.0): This is the fine-tuned Stable Diffusion model trained on images of smoke
+    - **Sonic Diffusion** (v2): SonicDiffusionV2.ckpt was trained on AnythingV3 for 200 epochs of 203 hand captioned Sonic images from various artists
     - **Spider-Verse Diffusion** (v1): Based on the Into the Spider-Verse movie's animation style
     - **Squishmallow Diffusion** (v1): Squishmallows
     - **Supermarionation** (v2.0): This is a fine-tuned Stable Diffusion model (based on v1.5) trained on screenshots from Gerry Anderson Supermarionation stop motion animation movie, basically from Thunderbirds tv series
@@ -126,6 +128,7 @@
     - **Synthwave** (v1): Stable Diffusion model to create images in Synthwave/outrun style
     - **Trinart Characters** (v2.0): Derrida (formerly TrinArt Characters v2) is a stable diffusion v1-based model that was further improved on the previous characters v1 model. While this is still a versatility and compositional variation anime/manga model like other TrinArt models, when compared to the v1 model, Derrida was focused on more anatomical stability and slightly less on variation due to further multi-epoch training and finetuning.
     - **Tron Legacy Diffusion** (v1): Tron Legacy movie style
+    - **Ultraskin** (v0.9): This model will add a LOT of skin detail compared to SD 2.1. Sometimes this makes images look more realistic, sometimes less realistic!
     - **Valorant Diffusion** (v1.0): This model was trained on the Valorant agents splash arts, and some extra arts on the official website
     - **Van Gogh Diffusion** (v1): Stable Diffusion model trained on screenshots from the film Loving Vincent, best results with k_euler sampler
     - **Vintedois Diffusion** (v0.1): Vintedois (22h) Diffusion model trained by Predogl and piEsposito with open weights, configs and prompts (as it should be).  This model was trained on a large amount of high quality images with simple prompts to generate beautiful images without a lot of prompt engineering.
@@ -152,12 +155,7 @@
 
 ## How to install it
 
-From the root folder of the Web UI, run:
-```bash
-git clone https://github.com/natanjunges/stable-diffusion-webui-stable-horde extensions/stable-horde
-```
-
-Alternatively, you can download this extension clicking in [this](https://github.com/natanjunges/stable-diffusion-webui-stable-horde/archive/refs/heads/main.zip) link and extract the zip file in the `extensions` folder of the Web UI.
+In the Web UI, go to the `Extensions` tab, `Available`, load the list, find `Stable Horde Client` and click `Install`.
 
 ## How to use it
 
