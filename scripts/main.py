@@ -427,13 +427,14 @@ class Main(scripts.Script):
             id = id["id"]
             shared.state.sampling_steps = 0
             start = time.time()
+            timeout = 1
 
             while True:
                 if shared.state.skipped or shared.state.interrupted:
                     return self.cancel_process_batch_horde(id)
 
                 try:
-                    status = session.get("{}/v2/generate/check/{}".format(self.api_endpoint, id), timeout=1)
+                    status = session.get("{}/v2/generate/check/{}".format(self.api_endpoint, id), timeout=timeout)
                     status = status.json()
                     elapsed = int(time.time() - start)
                     shared.state.sampling_steps = elapsed + status["wait_time"]
@@ -457,6 +458,10 @@ class Main(scripts.Script):
                     else:
                         time.sleep(1)
                 except requests.Timeout:
+                    if timeout >= 60:
+                        raise StableHordeError("Reached maximum number of retries")
+
+                    timeout *= 2
                     time.sleep(1)
         except AssertionError:
             id = id.json()
