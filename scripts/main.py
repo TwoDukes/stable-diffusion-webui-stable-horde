@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from modules import scripts, processing, shared, images, devices, ui, sd_models
+from modules import scripts, processing, shared, images, devices, ui
 import gradio
 import requests
 import time
@@ -29,11 +29,15 @@ import json
 
 settings_file = os.path.join(scripts.basedir(), "settings.json")
 
+class FakeCheckpointInfo:
+    def __init__(self, model_name):
+        self.model_name = model_name
+
 class FakeModel:
     sd_model_hash=""
 
     def __init__(self, name):
-        self.sd_checkpoint_info = sd_models.CheckpointInfo("", "", "", name)
+        self.sd_checkpoint_info = FakeCheckpointInfo(name)
 
 class StableHordeError(Exception):
     pass
