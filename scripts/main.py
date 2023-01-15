@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from modules import scripts, processing, shared, images, devices, ui
+from modules import scripts, processing, shared, images, devices, ui, lowvram
 import gradio
 import requests
 import time
@@ -217,7 +217,7 @@ class Main(scripts.Script):
 
     def process_images_inner(self, p, model, nsfw, shared_laion, seed_variation, post_processing):
         # Copyright (C) 2022  AUTOMATIC1111
-        # https://github.com/AUTOMATIC1111/stable-diffusion-webui/blob/d7aec59c4eb02f723b3d55c6f927a42e97acd679/modules/processing.py#L493-L687
+        # https://github.com/AUTOMATIC1111/stable-diffusion-webui/blob/ce13ced5dc5ce06634b3313bbfed6d479f8a4538/modules/processing.py#L493-L687
 
         fake_model = FakeModel(model)
 
@@ -257,15 +257,15 @@ class Main(scripts.Script):
             shared.sd_model = old_model
             return ret
 
+        if p.scripts is not None:
+            p.scripts.process(p)
+
         with open(os.path.join(shared.script_path, "params.txt"), "w", encoding="utf8") as file:
             old_model = shared.sd_model
             shared.sd_model = fake_model
             processed = processing.Processed(p, [], p.seed, "")
             file.write(processed.infotext(p, 0))
             shared.sd_model = old_model
-
-        if p.scripts is not None:
-            p.scripts.process(p)
 
         infotexts = []
         output_images = []
@@ -301,6 +301,14 @@ class Main(scripts.Script):
 
                 if x_samples_ddim is None:
                     break
+
+                x_samples_ddim = [s.cpu() for s in x_samples_ddim]
+                x_samples_ddim = torch.stack(x_samples_ddim).float()
+
+                if shared.cmd_opts.lowvram or shared.cmd_opts.medvram:
+                    lowvram.send_everything_to_cpu()
+
+                devices.torch_gc()
 
                 if p.scripts is not None:
                     p.scripts.postprocess_batch(p, x_samples_ddim, batch_number=n)
@@ -453,7 +461,6 @@ class Main(scripts.Script):
                         images = [PIL.Image.open(io.BytesIO(base64.b64decode(image["img"]))) for image in images]
                         images = [numpy.moveaxis(numpy.array(image).astype(numpy.float32) / 255.0, 2, 0) for image in images]
                         images = [torch.from_numpy(image) for image in images]
-                        images = torch.stack(images).to(shared.device)
                         return (images, models)
                     elif status["faulted"]:
                         raise StableHordeError("This request caused an internal server error and could not be completed.")
