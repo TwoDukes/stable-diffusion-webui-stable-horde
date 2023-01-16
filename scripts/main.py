@@ -447,6 +447,7 @@ class Main(scripts.Script):
 
                 try:
                     status = session.get("{}/v2/generate/check/{}".format(self.api_endpoint, id), timeout=timeout)
+                    assert status.status_code == 200, "Status Code: {} (expected {})".format(status.status_code, 200)
                     status = status.json()
                     elapsed = int(time.time() - start)
                     shared.state.sampling_steps = elapsed + status["wait_time"]
@@ -474,6 +475,9 @@ class Main(scripts.Script):
 
                     timeout *= 2
                     time.sleep(1)
+                except AssertionError:
+                    status = status.json()
+                    raise StableHordeError(status["message"])
         except AssertionError:
             id = id.json()
             raise StableHordeError(id["message"])
@@ -488,7 +492,6 @@ class Main(scripts.Script):
         images = [torch.from_numpy(image) for image in images]
 
         if len(images) > 0:
-            images = torch.stack(images).to(shared.device)
             return (images, models)
         else:
             return (None, None)
