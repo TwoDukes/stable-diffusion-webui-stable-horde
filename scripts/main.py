@@ -299,7 +299,7 @@ class Main(scripts.Script):
 
                 x_samples_ddim, models = self.process_batch_horde(p, model, nsfw, shared_laion, seed_variation, post_processing, prompts[0], negative_prompts[0], seeds[0])
 
-                if x_samples_ddim is None:
+                if x_samples_ddim is None or len(x_samples_ddim) == 0:
                     break
 
                 x_samples_ddim = [s.cpu() for s in x_samples_ddim]
