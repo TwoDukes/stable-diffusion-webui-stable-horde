@@ -391,7 +391,8 @@ class Main(scripts.Script):
                 "karras": p.sampler_name in self.KARRAS,
                 "steps": p.steps,
                 "n": p.batch_size
-            }
+            },
+            "r2": False
         }
         self.load_settings()
 
