@@ -25,9 +25,7 @@ import os.path
 import numpy
 import itertools
 import torch
-import json
-
-settings_file = os.path.join(scripts.basedir(), "settings.json")
+from scripts.settings_manager import SettingsManager
 
 class FakeCheckpointInfo:
     def __init__(self, model_name):
@@ -39,10 +37,10 @@ class FakeModel:
     def __init__(self, name):
         self.sd_checkpoint_info = FakeCheckpointInfo(name)
 
-class StableHordeError(Exception):
+class StableHordeGenerateError(Exception):
     pass
 
-class Main(scripts.Script):
+class Main(SettingsManager, scripts.Script):
     TITLE = "Run on Stable Horde"
     SAMPLERS = {
         "LMS": "k_lms",
@@ -69,23 +67,6 @@ class Main(scripts.Script):
 
     def show(self, is_img2img):
         return True
-
-    def load_settings(self):
-        if os.path.exists(settings_file):
-            with open(settings_file) as file:
-                opts = json.load(file)
-
-            self.api_endpoint = opts["api_endpoint"]
-            self.api_key = opts["api_key"]
-            self.censor_nsfw = opts["censor_nsfw"]
-            self.trusted_workers = opts["trusted_workers"]
-            self.workers = opts["workers"]
-        else:
-            self.api_endpoint = "https://stablehorde.net/api"
-            self.api_key = "0000000000"
-            self.censor_nsfw = True
-            self.trusted_workers = True
-            self.workers = []
 
     def load_models(self):
         self.load_settings()
@@ -465,23 +446,26 @@ class Main(scripts.Script):
                         images = [torch.from_numpy(image) for image in images]
                         return (images, models)
                     elif status["faulted"]:
-                        raise StableHordeError("This request caused an internal server error and could not be completed.")
+                        raise StableHordeGenerateError("This request caused an internal server error and could not be completed.")
                     elif not status["is_possible"]:
-                        raise StableHordeError("This request will not be able to be completed with the pool of workers currently available.")
+                        raise StableHordeGenerateError("This request will not be able to be completed with the pool of workers currently available.")
                     else:
+                        if timeout > 1:
+                            timeout //= 2
+
                         time.sleep(1)
                 except requests.Timeout:
                     if timeout >= 60:
-                        raise StableHordeError("Reached maximum number of retries")
+                        raise StableHordeGenerateError("Reached maximum number of retries")
 
                     timeout *= 2
                     time.sleep(1)
                 except AssertionError:
                     status = status.json()
-                    raise StableHordeError(status["message"])
+                    raise StableHordeGenerateError(status["message"])
         except AssertionError:
             id = id.json()
-            raise StableHordeError(id["message"])
+            raise StableHordeGenerateError(id["message"])
 
     def cancel_process_batch_horde(self, id):
         images = requests.delete("{}/v2/generate/status/{}".format(self.api_endpoint, id), timeout=60)

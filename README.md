@@ -3,9 +3,8 @@
 
 ## Features
 
-- **txt2img**, **img2img**, **depth2img** and **inpaint**
+- **txt2img**, **img2img**, **depth2img**, **inpaint** and **interrogation** (img2txt)
     - *Outpaint coming soon*
-    - *Interrogate (img2txt) coming soon*
 - **SFW and NSFW generations**
 - **Share generated images with [LAION](https://laion.ai) for improving their dataset**
     - *Aesthetic image rating coming soon*
@@ -56,7 +55,7 @@
     - **AIO Pixel Art** (v1): Stable Diffusion fine tuned on pixel art sprites and scenes
     - **Analog Diffusion** (v1.0): A dreambooth model trained on a diverse set of analog photographs
     - **Anygen** (v3.7): A best of both worlds - merging the anime of Anything v3 with Protogens photorealism - VAE is included
-    - **Anything Diffusion** (v3): Highly detailed Anime styled generations
+    - **Anything Diffusion** (v4.5): Highly detailed Anime styled generations
     - **App Icon Diffusion** (v1): Dreambooth model fine tuned on mobile app icons
     - **Arcane Diffusion** (v3): Based on the Arcane TV show
     - **Archer Diffusion** (v1): Based on the Archer's TV show animation style
@@ -69,6 +68,7 @@
     - **Clazy** (v1): Generates clay-like figures
     - **Comic-Diffusion** (v2): Western Comic book style
     - **Cyberpunk Anime Diffusion** (v1): Cyberpunk anime characters
+    - **DGSpitzer Art Diffusion** (v1): Dreambooth model based on Vintedois, trained on a dataset of DGSpitzer art. Styles included are outline, sketch, anime, painting and landscape
     - **Dark Victorian Diffusion** (v2.0): finetuned on dark, moody, victorian imagery
     - **Darkest Diffusion** (v1.0): A free and open source Stable Diffusion model created by AI-Characters, trained on the artstyle of the game 'Darkest Dungeon'
     - **DnD Item** (v1.0): This is a model (dnditem) for creating magic items, for the game Dungeons and Dragons! It was trained to be very similar to the official results that are available here: https://www.dndbeyond.com/magic-items
@@ -76,6 +76,8 @@
     - **DreamLikeSamKuvshinov** (v1): A mixture of Dreamlike Diffusion 1.0, SamDoesArt V3 and Kuvshinov style models.  Created mostly for exploring different character concepts with a focus on drawings, but the mix happened to be pretty good at realistic-ish images, all thanks to wonderful models that it uses.
     - **Dreamlike Diffusion** (v1.0): Dreamlike Diffusion 1.0 is SD 1.5 fine tuned on high quality art, made by dreamlike.art
     - **Dreamlike Photoreal** (v2.0): Dreamlike Photoreal 1.0 is a photorealistic Stable Diffusion 1.5 model fine tuned on high quality photos, made by dreamlike.art.
+    - **Dreamshaper** (v3.3): Merged model mix of Midnight mixer, roboEtics, f222, elldrethSLucidMix, Seek.ART Mega, rpg, hassanBlend, modelshoot and roboDiffusion
+    - **DucHaiten** (v1.1): DucHaiten's character generation model
     - **Dungeons and Diffusion** (v1): Generates D&D styled characters, trained on art commissions
     - **Eimis Anime Diffusion** (v1): This model is trained with high quality and detailed anime images
     - **Elden Ring Diffusion** (v2): Based on the Elden Ring video game style
@@ -95,6 +97,8 @@
     - **Inkpunk Diffusion** (v2): inspired by Gorillaz art, FLCL and Yoji Shinkawa. Trained on images generated from Midjourney
     - **JWST Deep Space Diffusion** (v1): Stable Diffusion fine tuned on JWST imagery
     - **Knollingcase** (v1): generates a glass display case with objects inside, inspired by Sean Preston. Trained on Midjourney images
+    - **Lawlas's yiff mix** (v1): Based on yiffy-e18 and Anything, produces sfw/nsfw furry anthro artworks of different styles with consistant quality, while maintaining details on stuff like clothes, background, etc. with simpler prompts.
+    - **Marvel Diffusion** (v2): This model was trained on images from the animated Marvel Disney+ show What If, which includes characters, background, and some objects
     - **Mega Merge Diffusion** (v1): SD 1.5 merged with 17 other models
     - **Microscopic** (v1.0): This is the fine-tuned Stable Diffusion model trained on microscopic images
     - **Microworlds** (v1): Isometric microworlds
@@ -111,6 +115,7 @@
     - **Poison** (v1): Anything Diffusion fine-tuned to produce high-quality realistic anime styled images
     - **PortraitPlus** (v1.0): This is a dreambooth model trained on a diverse set of close to medium range portraits of people.
     - **ProtoGen** (v5.3): One Step Closer to Reality
+    - **Protogen Infinity** (v8.6): Protogens photorealism mixed with more science fiction, comic, and synthwave to make ultimate awesomeness
     - **RPG** (v2): portraits of charecters in the style of the game Baldur's Gate
     - **Ranma Diffusion** (v1): imitates the style of late '80s early 90's anime, Anything v3 base
     - **Redshift Diffusion** (v1): Dreambooth model trained on high resolution 3D artworks
@@ -123,8 +128,9 @@
     - **Spider-Verse Diffusion** (v1): Based on the Into the Spider-Verse movie's animation style
     - **Squishmallow Diffusion** (v1): Squishmallows
     - **Supermarionation** (v2.0): This is a fine-tuned Stable Diffusion model (based on v1.5) trained on screenshots from Gerry Anderson Supermarionation stop motion animation movie, basically from Thunderbirds tv series
-    - **Sygil-Dev Diffusion** (v1): This model is a Stable Diffusion v1.5 fine-tune trained on the Imaginary Network Expanded Dataset. It is an advanced version of Stable Diffusion and can generate nearly all kinds of images, no matter humans, reflections, cities, architecture, fantasy, digital arts, landscapes, or nature views.
+    - **Sygil-Dev Diffusion** (v0.1): This model is a Stable Diffusion v1.5 fine-tune trained on the Imaginary Network Expanded Dataset. It is an advanced version of Stable Diffusion and can generate nearly all kinds of images, no matter humans, reflections, cities, architecture, fantasy, digital arts, landscapes, or nature views.
     - **Synthwave** (v1): Stable Diffusion model to create images in Synthwave/outrun style
+    - **T-Shirt Diffusion** (v1): Generates t-shirt logos, base model is vintedois-diffusion with additional training on t-shirt logos size 640x640px
     - **Trinart Characters** (v2.0): Derrida (formerly TrinArt Characters v2) is a stable diffusion v1-based model that was further improved on the previous characters v1 model. While this is still a versatility and compositional variation anime/manga model like other TrinArt models, when compared to the v1 model, Derrida was focused on more anatomical stability and slightly less on variation due to further multi-epoch training and finetuning.
     - **Tron Legacy Diffusion** (v1): Tron Legacy movie style
     - **Ultraskin** (v0.9): This model will add a LOT of skin detail compared to SD 2.1. Sometimes this makes images look more realistic, sometimes less realistic!
@@ -137,6 +143,7 @@
     - **Yiffy** (v18): Furry styled generations.
     - **Zack3D** (v1): Kink/NSFW oriented furry styled generations.
     - **Zeipher Female Model** (v222): For creating images of nude solo women. Also known as f222
+    - **Zelda BOTW** (v1): based off work of great artworks from Legend of Zelda: Breath of The Wild
     - **colorbook** (v1): Minimalist coloring book style images
     - **kurzgesagt** (v1): A DreamBooth finetune of Stable Diffusion v1.5 model trained on a bunch of stills from Kurzgesagt videos
     - **mo-di-diffusion** (v1): Popular animation studio modern style generations.
