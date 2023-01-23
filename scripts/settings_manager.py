@@ -19,6 +19,7 @@ import json
 import os.path
 
 class SettingsManager:
+    CLIENT_AGENT = "Stable Horde for Web UI:beta:natanjunges"
     settings_file = os.path.join(scripts.basedir(), "settings.json")
 
     def reset_settings(self):

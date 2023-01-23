@@ -91,7 +91,7 @@ class Interrogation(SettingsManager):
 
         try:
             session = requests.Session()
-            id = session.post("{}/v2/interrogate/async".format(self.api_endpoint), headers={"apikey": self.api_key}, json=payload)
+            id = session.post("{}/v2/interrogate/async".format(self.api_endpoint), headers={"apikey": self.api_key, "Client-Agent": self.CLIENT_AGENT}, json=payload)
             assert id.status_code == 202, "Status Code: {} (expected {})".format(id.status_code, 202)
             id = id.json()
             id = id["id"]

@@ -72,7 +72,7 @@ class Main(SettingsManager, scripts.Script):
         self.load_settings()
 
         try:
-            models = requests.get("{}/v2/status/models".format(self.api_endpoint))
+            models = requests.get("{}/v2/status/models".format(self.api_endpoint), headers={"Client-Agent": self.CLIENT_AGENT})
             models = models.json()
             models.sort(key=lambda m: (-m["count"], m["name"]))
             models = ["{} ({})".format(m["name"], m["count"]) for m in models]
@@ -415,7 +415,7 @@ class Main(SettingsManager, scripts.Script):
 
         try:
             session = requests.Session()
-            id = session.post("{}/v2/generate/async".format(self.api_endpoint), headers={"apikey": self.api_key}, json=payload)
+            id = session.post("{}/v2/generate/async".format(self.api_endpoint), headers={"apikey": self.api_key, "Client-Agent": self.CLIENT_AGENT}, json=payload)
             assert id.status_code == 202, "Status Code: {} (expected {})".format(id.status_code, 202)
             id = id.json()
             id = id["id"]
@@ -428,7 +428,7 @@ class Main(SettingsManager, scripts.Script):
                     return self.cancel_process_batch_horde(id)
 
                 try:
-                    status = session.get("{}/v2/generate/check/{}".format(self.api_endpoint, id), timeout=timeout)
+                    status = session.get("{}/v2/generate/check/{}".format(self.api_endpoint, id), headers={"Client-Agent": self.CLIENT_AGENT}, timeout=timeout)
                     assert status.status_code == 200, "Status Code: {} (expected {})".format(status.status_code, 200)
                     status = status.json()
                     elapsed = int(time.time() - start)
@@ -437,7 +437,7 @@ class Main(SettingsManager, scripts.Script):
 
                     if status["done"]:
                         shared.state.sampling_steps = shared.state.sampling_step
-                        images = session.get("{}/v2/generate/status/{}".format(self.api_endpoint, id))
+                        images = session.get("{}/v2/generate/status/{}".format(self.api_endpoint, id), headers={"Client-Agent": self.CLIENT_AGENT})
                         images = images.json()
                         images = images["generations"]
                         models = [image["model"] for image in images]
@@ -468,7 +468,7 @@ class Main(SettingsManager, scripts.Script):
             raise StableHordeGenerateError(id["message"])
 
     def cancel_process_batch_horde(self, id):
-        images = requests.delete("{}/v2/generate/status/{}".format(self.api_endpoint, id), timeout=60)
+        images = requests.delete("{}/v2/generate/status/{}".format(self.api_endpoint, id), headers={"Client-Agent": self.CLIENT_AGENT}, timeout=60)
         images = images.json()
         images = images["generations"]
         models = [image["model"] for image in images]
