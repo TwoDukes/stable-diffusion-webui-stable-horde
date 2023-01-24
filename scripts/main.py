@@ -198,7 +198,7 @@ class Main(SettingsManager, scripts.Script):
 
     def process_images_inner(self, p, model, nsfw, shared_laion, seed_variation, post_processing):
         # Copyright (C) 2022  AUTOMATIC1111
-        # https://github.com/AUTOMATIC1111/stable-diffusion-webui/blob/ce13ced5dc5ce06634b3313bbfed6d479f8a4538/modules/processing.py#L493-L687
+        # https://github.com/AUTOMATIC1111/stable-diffusion-webui/blob/5c1cb9263f980641007088a37360fcab01761d37/modules/processing.py#L492-L699
 
         fake_model = FakeModel(model)
 
@@ -241,17 +241,17 @@ class Main(SettingsManager, scripts.Script):
         if p.scripts is not None:
             p.scripts.process(p)
 
-        with open(os.path.join(shared.script_path, "params.txt"), "w", encoding="utf8") as file:
-            old_model = shared.sd_model
-            shared.sd_model = fake_model
-            processed = processing.Processed(p, [], p.seed, "")
-            file.write(processed.infotext(p, 0))
-            shared.sd_model = old_model
-
         infotexts = []
         output_images = []
 
         with torch.no_grad():
+            with open(os.path.join(shared.script_path, "params.txt"), "w", encoding="utf8") as file:
+                old_model = shared.sd_model
+                shared.sd_model = fake_model
+                processed = processing.Processed(p, [], p.seed, "")
+                file.write(processed.infotext(p, 0))
+                shared.sd_model = old_model
+
             if shared.state.job_count == -1:
                 shared.state.job_count = p.n_iter
 
@@ -370,6 +370,7 @@ class Main(SettingsManager, scripts.Script):
                 "width": p.width,
                 "seed_variation": seed_variation,
                 "karras": p.sampler_name in self.KARRAS,
+                "tiling": p.tiling,
                 "steps": p.steps,
                 "n": p.batch_size
             },
