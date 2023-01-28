@@ -57,9 +57,11 @@ class Main(SettingsManager, scripts.Script):
         "DPM++ 2S a": "k_dpmpp_2s_a",
         "DPM++ 2S a Karras": "k_dpmpp_2s_a",
         "DPM++ 2M": "k_dpmpp_2m",
-        "DPM++ 2M Karras": "k_dpmpp_2m"
+        "DPM++ 2M Karras": "k_dpmpp_2m",
+        "DPM++ SDE": "k_dpmpp_sde",
+        "DPM++ SDE Karras": "k_dpmpp_sde"
     }
-    KARRAS = {"LMS Karras", "DPM2 Karras", "DPM2 a Karras", "DPM++ 2S a Karras", "DPM++ 2M Karras"}
+    KARRAS = {"LMS Karras", "DPM2 Karras", "DPM2 a Karras", "DPM++ 2S a Karras", "DPM++ 2M Karras", "DPM++ SDE Karras"}
     POST_PROCESSINGS = {"CodeFormers (Face restoration)", "GFPGAN (Face restoration)", "RealESRGAN_x4plus (Upscaling)"}
 
     def title(self):
