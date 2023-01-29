@@ -365,15 +365,19 @@ class Main(SettingsManager, scripts.Script):
         return res
 
     def process_batch_horde(self, p, model, nsfw, shared_laion, seed_variation, post_processing, prompt, negative_prompt, seed):
+        try:
+            assert model != "stable_diffusion_inpainting" or self.is_img2img and p.image_mask is not None, "Model stable_diffusion_inpainting can only be used for inpainting"
+            assert model != "Stable Diffusion 2 Depth" or self.is_img2img and p.image_mask is None, "Model Stable Diffusion 2 Depth can only be used for img2img"
+        except AssertionError as e:
+            raise StableHordeGenerateError(str(e))
+
         payload = {
             "prompt": "{} ### {}".format(prompt, negative_prompt) if len(negative_prompt) > 0 else prompt,
             "params": {
-                "sampler_name": self.SAMPLERS.get(p.sampler_name),
                 "cfg_scale": p.cfg_scale,
                 "seed": str(seed),
                 "height": p.height,
                 "width": p.width,
-                "karras": " Karras" in p.sampler_name,
                 "steps": p.steps,
                 "n": p.batch_size
             },
@@ -381,19 +385,31 @@ class Main(SettingsManager, scripts.Script):
         }
         self.load_settings()
 
-        if payload["params"]["sampler_name"] is None:
-            payload["params"]["sampler_name"] = "k_euler_a"
-            payload["params"]["karras"] = False
-            p.extra_generation_params["Sampler"] = "Euler a"
-
         if p.batch_size > 1:
             payload["params"]["seed_variation"] = seed_variation
 
         if len(post_processing) > 0:
             payload["params"]["post_processing"] = post_processing
 
-        if p.tiling:
-            payload["params"]["tiling"] = True
+        if not self.is_img2img or p.image_mask is None:
+            if self.is_img2img:
+                payload["params"]["denoising_strength"] = p.denoising_strength
+
+            if model != "Stable Diffusion 2 Depth":
+                payload["params"]["sampler_name"] = self.SAMPLERS.get(p.sampler_name)
+
+                if payload["params"]["sampler_name"] is None:
+                    payload["params"]["sampler_name"] = "k_euler_a"
+                    p.extra_generation_params["Sampler"] = "Euler a"
+                elif " Karras" in p.sampler_name:
+                    payload["params"]["karras"] = True
+
+                if p.tiling:
+                    payload["params"]["tiling"] = True
+            else:
+                p.extra_generation_params["Sampler"] = "Euler a"
+        else:
+            p.extra_generation_params["Sampler"] = "Euler a"
 
         if nsfw:
             payload["nsfw"] = True
@@ -410,7 +426,6 @@ class Main(SettingsManager, scripts.Script):
             payload["models"] = [model]
 
         if self.is_img2img:
-            payload["params"]["denoising_strength"] = p.denoising_strength
             buffer = io.BytesIO()
             p.init_images[0].save(buffer, format="WEBP")
             payload["source_image"] = base64.b64encode(buffer.getvalue()).decode()
