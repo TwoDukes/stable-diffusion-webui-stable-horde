@@ -1,5 +1,5 @@
 # Stable Horde for Web UI, a Stable Horde client for AUTOMATIC1111's Stable Diffusion Web UI
-# Copyright (C) 2022  Natan Junges <natanajunges@gmail.com>
+# Copyright (C) 2023  Natan Junges <natanajunges@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -61,7 +61,6 @@ class Main(SettingsManager, scripts.Script):
         "DPM++ SDE": "k_dpmpp_sde",
         "DPM++ SDE Karras": "k_dpmpp_sde"
     }
-    KARRAS = {"LMS Karras", "DPM2 Karras", "DPM2 a Karras", "DPM++ 2S a Karras", "DPM++ 2M Karras", "DPM++ SDE Karras"}
     POST_PROCESSINGS = {"CodeFormers (Face restoration)", "GFPGAN (Face restoration)", "RealESRGAN_x4plus (Upscaling)"}
 
     def title(self):
@@ -171,7 +170,7 @@ class Main(SettingsManager, scripts.Script):
         return self.process_images(p, model, nsfw, shared_laion, int(seed_variation), post_processing)
 
     def process_images(self, p, model, nsfw, shared_laion, seed_variation, post_processing):
-        # Copyright (C) 2022  AUTOMATIC1111
+        # Copyright (C) 2023  AUTOMATIC1111
         # https://github.com/AUTOMATIC1111/stable-diffusion-webui/blob/d7aec59c4eb02f723b3d55c6f927a42e97acd679/modules/processing.py#L463-L490
 
         stored_opts = {k: shared.opts.data[k] for k in p.override_settings.keys()}
@@ -183,8 +182,8 @@ class Main(SettingsManager, scripts.Script):
             p.extra_generation_params = {
                 "Model": model,
                 "NSFW": nsfw,
-                "Share with LAION": shared_laion,
-                "Seed variation": seed_variation,
+                "Share with LAION": self.api_key == "0000000000" or shared_laion if not self.is_img2img else None,
+                "Seed variation": seed_variation if p.batch_size > 1 else None,
                 "Post processing 1": (post_processing[0] if len(post_processing) >= 1 else None),
                 "Post processing 2": (post_processing[1] if len(post_processing) >= 2 else None),
                 "Post processing 3": (post_processing[2] if len(post_processing) >= 3 else None)
@@ -199,8 +198,8 @@ class Main(SettingsManager, scripts.Script):
         return res
 
     def process_images_inner(self, p, model, nsfw, shared_laion, seed_variation, post_processing):
-        # Copyright (C) 2022  AUTOMATIC1111
-        # https://github.com/AUTOMATIC1111/stable-diffusion-webui/blob/5c1cb9263f980641007088a37360fcab01761d37/modules/processing.py#L492-L699
+        # Copyright (C) 2023  AUTOMATIC1111
+        # https://github.com/AUTOMATIC1111/stable-diffusion-webui/blob/00dab8f10defbbda579a1bc89c8d4e972c58a20d/modules/processing.py#L501-L717
 
         fake_model = FakeModel(model)
 
@@ -302,6 +301,11 @@ class Main(SettingsManager, scripts.Script):
                     image = PIL.Image.fromarray(x_sample)
                     p.extra_generation_params["Model"] = models[i]
 
+                    if p.scripts is not None:
+                        pp = scripts.PostprocessImageArgs(image)
+                        p.scripts.postprocess_image(p, pp)
+                        image = pp.image
+
                     if p.color_corrections is not None and i < len(p.color_corrections):
                         if shared.opts.save and not p.do_not_save_samples and shared.opts.save_images_before_color_correction:
                             image_without_cc = processing.apply_overlay(image, p.paste_to, i, p.overlay_images)
@@ -364,21 +368,32 @@ class Main(SettingsManager, scripts.Script):
         payload = {
             "prompt": "{} ### {}".format(prompt, negative_prompt) if len(negative_prompt) > 0 else prompt,
             "params": {
-                "sampler_name": self.SAMPLERS.get(p.sampler_name, "k_euler_a"),
+                "sampler_name": self.SAMPLERS.get(p.sampler_name),
                 "cfg_scale": p.cfg_scale,
-                "denoising_strength": p.denoising_strength if p.denoising_strength is not None else 0,
                 "seed": str(seed),
                 "height": p.height,
                 "width": p.width,
-                "seed_variation": seed_variation,
-                "karras": p.sampler_name in self.KARRAS,
-                "tiling": p.tiling,
+                "karras": " Karras" in p.sampler_name,
                 "steps": p.steps,
                 "n": p.batch_size
             },
             "r2": False
         }
         self.load_settings()
+
+        if payload["params"]["sampler_name"] is None:
+            payload["params"]["sampler_name"] = "k_euler_a"
+            payload["params"]["karras"] = False
+            p.extra_generation_params["Sampler"] = "Euler a"
+
+        if p.batch_size > 1:
+            payload["params"]["seed_variation"] = seed_variation
+
+        if len(post_processing) > 0:
+            payload["params"]["post_processing"] = post_processing
+
+        if p.tiling:
+            payload["params"]["tiling"] = True
 
         if nsfw:
             payload["nsfw"] = True
@@ -395,13 +410,12 @@ class Main(SettingsManager, scripts.Script):
             payload["models"] = [model]
 
         if self.is_img2img:
+            payload["params"]["denoising_strength"] = p.denoising_strength
             buffer = io.BytesIO()
             p.init_images[0].save(buffer, format="WEBP")
             payload["source_image"] = base64.b64encode(buffer.getvalue()).decode()
 
-            if p.image_mask is None:
-                payload["source_processing"] = "img2img"
-            else:
+            if p.image_mask is not None:
                 payload["source_processing"] = "inpainting"
                 buffer = io.BytesIO()
                 p.image_mask.save(buffer, format="WEBP")
@@ -409,9 +423,6 @@ class Main(SettingsManager, scripts.Script):
 
         if not self.is_img2img and self.api_key != "0000000000" and shared_laion:
             payload["shared"] = True
-
-        if len(post_processing) > 0:
-            payload["params"]["post_processing"] = post_processing
 
         if shared.state.skipped or shared.state.interrupted:
             return (None, None)

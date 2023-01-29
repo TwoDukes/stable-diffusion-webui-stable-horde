@@ -157,6 +157,7 @@
     - **colorbook** (v1): Minimalist coloring book style images
     - **kurzgesagt** (v1): A DreamBooth finetune of Stable Diffusion v1.5 model trained on a bunch of stills from Kurzgesagt videos
     - **mo-di-diffusion** (v1): Popular animation studio modern style generations.
+    - **pix2pix** (v1): Model specifically trained for pix2pix use
     - **trinart** (v1): Manga styled generations.
     - **vectorartz** (v1): Generate beautiful vector illustration
     - **waifu_diffusion** (v1.3): Anime styled generations.
