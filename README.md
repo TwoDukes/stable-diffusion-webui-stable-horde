@@ -3,7 +3,7 @@
 
 ## Features
 
-- **txt2img**, **img2img**, **depth2img**, **inpaint** and **interrogation** (img2txt)
+- **txt2img**, **img2img**, **depth2img**, **pix2pix**, **inpaint** and **interrogation** (img2txt)
     - *Outpaint coming soon*
 - **SFW and NSFW generations**
 - **Share generated images with [LAION](https://laion.ai) for improving their dataset**
