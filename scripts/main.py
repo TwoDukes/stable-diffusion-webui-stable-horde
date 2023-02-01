@@ -367,7 +367,7 @@ class Main(SettingsManager, scripts.Script):
     def process_batch_horde(self, p, model, nsfw, shared_laion, seed_variation, post_processing, prompt, negative_prompt, seed):
         try:
             assert model != "stable_diffusion_inpainting" or self.is_img2img and p.image_mask is not None, "Model stable_diffusion_inpainting can only be used for inpainting"
-            assert model != "Stable Diffusion 2 Depth" or self.is_img2img and p.image_mask is None, "Model Stable Diffusion 2 Depth can only be used for img2img"
+            assert model not in {"Stable Diffusion 2 Depth", "pix2pix"} or self.is_img2img and p.image_mask is None, "Model {} can only be used for img2img".format(model)
         except AssertionError as e:
             raise StableHordeGenerateError(str(e))
 
